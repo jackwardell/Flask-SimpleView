@@ -7,7 +7,7 @@ GET_RETURNS = "hello world"
 POST_RETURNS = {"goodbye": "world"}
 
 
-class SimpleView(flask_simpleview.View):
+class SimpleView(flask_simpleview.SimpleView):
     rule = RULE
     endpoint = ENDPOINT
 

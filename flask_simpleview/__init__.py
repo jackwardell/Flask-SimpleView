@@ -2,18 +2,8 @@ import flask
 import flask.views
 
 
-# pattern = re.compile(r"(?<!^)(?=[A-Z])")
-
-
 class NoTemplate(Exception):
     pass
-
-
-# def camel_case_to_snake_case(word):
-#     return pattern.sub("_", word).lower()
-
-# def camel_case_to_slug(word):
-#     return pattern.sub("-", word).lower()
 
 
 class SkeletonMixin:
@@ -35,7 +25,7 @@ class Blueprint(flask.Blueprint, SkeletonMixin):
     pass
 
 
-class View(flask.views.MethodView):
+class SimpleView(flask.views.MethodView):
     @property
     def rule(self):
         raise NotImplementedError()
@@ -43,22 +33,6 @@ class View(flask.views.MethodView):
     @property
     def endpoint(self):
         raise NotImplementedError()
-
-    # @property
-    # def name(self):
-    #     return self.__class__.__name__
-
-    # @property
-    # def rule(self):
-    #     return "/" + camel_case_to_slug(self.__class__.__name__)
-
-    # @property
-    # def endpoint(self):
-    #     return camel_case_to_snake_case(self.name)
-
-    # @property
-    # def template(self):
-    #     return camel_case_to_snake_case(self.name) + ".html"
 
     def render_template(self, *optional_template_name_or_list, **context):
         if not hasattr(self, "template") or not optional_template_name_or_list:
@@ -81,4 +55,4 @@ class View(flask.views.MethodView):
         return rv
 
 
-API = View
+API = View = SimpleView
