@@ -16,21 +16,6 @@ class SkeletonMixin:
     def add_api(self, api):
         self.add_view(api)
 
-    # def route(self, rule, **options):
-    #     def decorator(func_or_cls):
-    #         endpoint = (
-    #                 options.pop("endpoint")
-    #                 or getattr(func_or_cls, "endpoint", None)
-    #                 or func_or_cls.__name__
-    #         )
-    #         if issubclass(func_or_cls, SimpleView):
-    #             self.add_url_rule(rule, view_func=func_or_cls.as_view(endpoint))
-    #         else:
-    #             self.add_url_rule(rule, endpoint, func_or_cls, **options)
-    #         return func_or_cls
-    #
-    #     return decorator
-
 
 class Flask(flask.Flask, SkeletonMixin):
     pass
@@ -71,5 +56,3 @@ class SimpleView(flask.views.MethodView):
 
 
 API = View = SimpleView
-
-Flask.route()

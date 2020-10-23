@@ -8,13 +8,22 @@ pip install flask_simpleview
 ## Use
 An example for a simple view:
 ```
-from flask_simpleview import Flask, Blueprint, SimpleView
+from flask_simpleview import Flask, SimpleView
 
 # this works exactly the same as flask.Flask
 # flask_simpleview.Flask is subclassed from flask.Flask
 # the only difference is the addition of 2 methods: `add_view` and `add_api`
 app = Flask(__name__)
 
+# and the same blurb again:
+# this works exactly the same as flask.Blueprint
+# flask_simpleview.Blueprint is subclassed from flask.Blueprint
+# the only difference is the addition of 2 methods: `add_view` and `add_api`
+blueprint = Blueprint('blueprint', __name__)
+
+# as Flask and Blueprint are the same as their parent classes
+# this will obviously work
+app.register_blueprint(blueprint)
 
 # This works exactly the same as flask.views.MethodView
 # flask_simpleview.SimpleView is subclassed from flask.views.MethodView
@@ -41,8 +50,32 @@ class SignUp(SimpleView):
         else:
             return self.render_template(form=form)
 
-
 app.add_view(SignUp)
+blueprint.add_view(SignUp)
+```
+
+With a blueprint:
+```
+from flask_simpleview import Blueprint, Login
+
+auth = Blueprint('auth', __name__)
+
+class Login(SimpleView):
+    rule = '/login'
+    endpoint = 'login'
+    template = 'login.html'
+
+    def get(self):
+        return self.render_template()
+
+    def post(self):
+        try:
+            login_user(request.form)
+            return self.redirect(self.url_for('app.dashboard'))
+        except LoginFailed as e:
+            return self.render_template(errors=e)
+
+auth.add_view(Login)
 ```
 
 Or if you want to specify the template in `self.render_template`:
@@ -88,7 +121,7 @@ class AnotherView(SimpleView):
     endpoint = 'another_view'
     
     def get(self):
-        return redirect('https://www.example.com")
+        return redirect('https://www.example.com')
 ```
 
 

@@ -1,9 +1,10 @@
-import flask_simpleview
 import flask
+
+import flask_simpleview
 
 RULE = '/simple-view'
 ENDPOINT = 'simple_view'
-GET_RETURNS = "hello world"
+GET_RETURNS = "<html><head></head><body>hello</body></html>"
 POST_RETURNS = {"goodbye": "world"}
 
 
@@ -23,7 +24,7 @@ def test_flask():
     app.add_view(SimpleView)
 
     with app.test_client() as client:
-        assert GET_RETURNS in client.get(RULE).data.decode()
+        assert client.get(RULE).data.decode() == GET_RETURNS
         assert client.post(RULE).json == POST_RETURNS
 
 
@@ -35,5 +36,5 @@ def test_blueprint():
     app.register_blueprint(blueprint)
 
     with app.test_client() as client:
-        assert GET_RETURNS in client.get(RULE).data.decode()
+        assert client.get(RULE).data.decode() == GET_RETURNS
         assert client.post(RULE).json == POST_RETURNS
