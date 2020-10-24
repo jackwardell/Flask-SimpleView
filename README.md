@@ -1,5 +1,39 @@
 # Very simple wrapper around Flask
 
+## Background
+* I write a lot of flask applications
+* Mature applications often come to look like:
+```
+@app.route('/some-location')
+@some_decorator
+@another_decorator
+@a_third_decorator
+def some_function():
+    if request.method == "POST":
+        ...
+        return render_template('some_template.html')
+    
+    elif request.method == "GET":
+        ...
+        return render_template('some_template.html')
+```
+* Where you have multiple decorators and `if request.method == 'POST':` sections in the function call
+
+
+## Interests
+* To separate out the concerns of the different HTTP methods
+* Simple decorator handling
+* Simple registration
+
+All of these things are provided by flask.views: https://flask.palletsprojects.com/en/1.1.x/views/
+
+I just hated the registration handling:
+`app.add_url_rule('/users/', view_func=ShowUsers.as_view('show_users'))`
+
+So I made is simpler:
+`app.add_view(ShowUsers)`
+
+
 ## Install
 ```
 pip install flask_simpleview
