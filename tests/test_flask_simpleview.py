@@ -23,6 +23,7 @@ class AnotherSimpleView(flask_simpleview.SimpleView):
     def get(self):
         return GET_RETURNS
 
+    @flask_simpleview.extends_rule('/id/')
     def post(self):
         return POST_RETURNS
 
@@ -37,7 +38,7 @@ def test_flask():
         assert client.post(RULE).json == POST_RETURNS
 
         assert client.get('/another-simple-view').data.decode() == GET_RETURNS
-        assert client.post('/another-simple-view').json == POST_RETURNS
+        assert client.post('/another-simple-view/id/').json == POST_RETURNS
 
 
 def test_blueprint():
