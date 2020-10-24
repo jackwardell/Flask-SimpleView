@@ -35,7 +35,7 @@ class SimpleView(flask.views.MethodView):
         raise NotImplementedError()
 
     def render_template(self, *optional_template_name_or_list, **context):
-        if not hasattr(self, "template") or not optional_template_name_or_list:
+        if not hasattr(self, "template") and not optional_template_name_or_list:
             raise NoTemplate("No template passed or found on the view")
 
         template_name_or_list = (

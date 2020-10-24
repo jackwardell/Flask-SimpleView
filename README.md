@@ -8,7 +8,7 @@ pip install flask_simpleview
 ## Use
 An example for a simple view:
 ```
-from flask_simpleview import Flask, SimpleView
+from flask_simpleview import Flask, Blueprint, SimpleView
 
 # this works exactly the same as flask.Flask
 # flask_simpleview.Flask is subclassed from flask.Flask
@@ -19,21 +19,45 @@ app = Flask(__name__)
 # this works exactly the same as flask.Blueprint
 # flask_simpleview.Blueprint is subclassed from flask.Blueprint
 # the only difference is the addition of 2 methods: `add_view` and `add_api`
-blueprint = Blueprint('blueprint', __name__)
+auth = Blueprint('auth', __name__)
 
 # as Flask and Blueprint are the same as their parent classes
 # this will obviously work
-app.register_blueprint(blueprint)
+app.register_blueprint(auth)
 
 # This works exactly the same as flask.views.MethodView
 # flask_simpleview.SimpleView is subclassed from flask.views.MethodView
 # the only difference is that you encapsulate the rule (route) and 
 # the endpoint in the class
 class SignUp(SimpleView):
+    # this is how you add a route
+    # the same as:
+    # @app.route('/sign-up')
     rule = '/sign-up'
-    endpoint = 'sign_up'
-    template = 'sign_up.html'
 
+    # this is how you add an endpoint
+    # the same as:
+    # @app.route('/sign-up', endpoint='sign_up')
+    # OR
+    # @app.route('/sign-up')
+    # def sign_up():
+    #     ... 
+    endpoint = 'sign_up'
+
+    # setting the template at class level so it can rendered 
+    # when using `self.render_template`
+    template = 'sign_up.html'
+    
+    # this is how you add decorators to View classes
+    # the same as:
+    # @app.route('/hello')
+    # @some_decorator
+    # @another_decorator
+    # def hello():
+    #     return "hello" 
+    decorators = (some_decorator, another_decorator)
+
+    # this is the same as @app.route('/sign-up', methods=['GET'])
     def get(self):
         # just assuming a form for the demonstration
         form = SignUpForm()
@@ -43,20 +67,29 @@ class SignUp(SimpleView):
     def post(self):
         form = SignUpForm(request.form)
         if form.validate_on_submit():
+            # do business logic here
             sign_up_user_from_form(form)
             # the SimpleView class has access to all flask functions
-            # `return self.thing` is the same as `return getattr(flask, 'thing')`
+            # `return self.thing` is the same as `return flask.thing`
             return self.redirect(self.url_for('login'))
         else:
             return self.render_template(form=form)
 
+# adding the view to the application
+# essentially this is equivalent to:
+# @app.route('/sign-up', methods=['GET', 'POST'])
+# def sign_up():
+#     ...
+#     return render_template('sign_up.html')
+       
+          
 app.add_view(SignUp)
-blueprint.add_view(SignUp)
+auth.add_view(SignUp)
 ```
 
-With a blueprint:
+Another example with only a blueprint:
 ```
-from flask_simpleview import Blueprint, Login
+from flask_simpleview import Blueprint, SimpleView
 
 auth = Blueprint('auth', __name__)
 
@@ -124,4 +157,5 @@ class AnotherView(SimpleView):
         return redirect('https://www.example.com')
 ```
 
+There is also aliases for `SimpleView`: `View` and `API` (namespace saved for some future features) 
 

@@ -1,5 +1,5 @@
 import flask
-
+import pytest
 import flask_simpleview
 
 RULE = '/simple-view'
@@ -38,3 +38,7 @@ def test_blueprint():
     with app.test_client() as client:
         assert client.get(RULE).data.decode() == GET_RETURNS
         assert client.post(RULE).json == POST_RETURNS
+
+
+if __name__ == "__main__":
+    pytest.main()
